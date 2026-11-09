@@ -933,6 +933,10 @@ body{font-family:'Barlow Condensed',sans-serif;font-size:16px;background:var(--b
         // Position refined from the user reference: HD map pixel (5766, 2624), on the inner river bank.
         // Coordinates are fractions of the untransformed 4320 × 3444 map image.
         const CRAFT_LOCATIONS = { 'Mauser Pistol': { x: 0.8136623741200927, y: 0.4671428762022888, title: 'Mauser Pistol', type: 'Craft de armas', color: '#30d5e0' } };
+        // Tall Trees: red marker in the supplied Manzanita Post reference.
+        CRAFT_LOCATIONS['Revolver Navy Crossover'] = { x: 0.4379275394208803, y: 0.588938568578772, title: 'Revolver Navy Crossover', type: 'Craft de armas', color: '#30d5e0', site: 'tall-trees' };
+        CRAFT_LOCATIONS['Revolver Apostador'] = { x: 0.4379275394208803, y: 0.588938568578772, title: 'Revolver Apostador', type: 'Craft de armas', color: '#30d5e0', site: 'tall-trees' };
+        CRAFT_LOCATIONS['Double Barrel Exotica'] = { x: 0.4379275394208803, y: 0.588938568578772, title: 'Double Barrel Exotica', type: 'Craft de armas', color: '#30d5e0', site: 'tall-trees' };
         let focusedCraft = null;
         function getSelectedCraftLocations() {
             const weapons = currentCat === 'armas' ? selectedWeapons : (STORE.armas?.s || {});
@@ -951,7 +955,7 @@ body{font-family:'Barlow Condensed',sans-serif;font-size:16px;background:var(--b
             if (!getSelectedCraftLocations()[name]) return;
             focusedCraft = name;
             setCategory('mapa');
-            document.getElementById('craftLocationName').textContent = name;
+            document.getElementById('craftLocationName').textContent = Object.entries(getSelectedCraftLocations()).filter(([key,m]) => key===name || (m.site && m.site===CRAFT_LOCATIONS[name].site)).map(([key])=>key).join(' · ');
             document.getElementById('craftLocationInfo').hidden = false;
             renderMarkers(markerCache);
             const reveal = () => requestAnimationFrame(() => {
@@ -970,15 +974,23 @@ body{font-family:'Barlow Condensed',sans-serif;font-size:16px;background:var(--b
             if (focusedCraft && document.getElementById('mapPanel').style.display !== 'none') centerCraftLocation();
         });
         function renderCraftMarkers(locations = getSelectedCraftLocations()) {
+            const groups = new Map();
             Object.entries(locations).forEach(([name,m]) => {
+                const key=m.site || name;
+                if (!groups.has(key)) groups.set(key,{m,names:[]});
+                groups.get(key).names.push(name);
+            });
+            groups.forEach(({m,names}) => {
+                const name=names.includes(focusedCraft) ? focusedCraft : names[0];
+                const caption=names.join(' · ');
                 const pin=document.createElement('button');
                 pin.type='button'; pin.className='map-marker craft-pin'+(focusedCraft===name?' craft-pin-focused':'');
                 const point=mapDisplayPoint(m);
                 pin.style.left=(point.x*100)+'%'; pin.style.top=(point.y*100)+'%';
-                pin.setAttribute('aria-label', name+' — local de craft');
-                pin.title=name+' — local de craft';
+                pin.setAttribute('aria-label', caption+' — local de craft');
+                pin.title=caption+' — local de craft';
                 const dot=document.createElement('span');dot.className='craft-pin-dot';dot.textContent='⌖';
-                const label=document.createElement('span');label.className='craft-pin-label';label.textContent=name+' · CRAFT';
+                const label=document.createElement('span');label.className='craft-pin-label';label.textContent=caption+' · CRAFT';
                 pin.append(dot,label);
                 pin.addEventListener('pointerdown',ev=>ev.stopPropagation());
                 pin.addEventListener('click',ev=>{ev.stopPropagation();showCraftLocation(name);});
