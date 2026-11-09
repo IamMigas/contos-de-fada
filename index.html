@@ -690,7 +690,7 @@ body{font-family:'Barlow Condensed',sans-serif;font-size:16px;background:var(--b
                         <div class="weapon-badge" id="badge-${name.replace(/\s+/g, '_')}">${qty > 0 ? qty : ''}</div>
                     </div>
                     <div class="weapon-type">${Object.keys(WEAPONS[name]).length} componentes</div>
-                    ${currentCat === 'armas' && name === 'Mauser Pistol' ? '<div class="craft-location-link">⌖ Local de craft marcado no mapa</div>' : ''}
+                    ${currentCat === 'armas' && ['Mauser Pistol', 'Revolver Navy Crossover', 'Revolver Apostador', 'Double Barrel Exotica'].includes(name) ? '<div class="craft-location-link">⌖ Local de craft marcado no mapa</div>' : ''}
                 `;
                 grid.appendChild(card);
             });
