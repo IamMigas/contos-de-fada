@@ -1,50 +1,53 @@
-# Contos de Fada — GitHub Pages
+# Contos de Fada · Oficina 2.0.0
 
-Versão estática para publicar diretamente num repositório público com GitHub Pages. Não precisa de Cloudflare, R2, Node.js, comandos de build ou cartão de pagamento para GitHub Pages num repositório público com GitHub Free.
+Aplicação estática para GitHub Pages. Mantém as receitas base e quantidades originais.
 
-## Substituir a versão anterior
+## Publicar esta atualização
 
-1. Extrai este ZIP.
+1. Extrai o ZIP. O `index.html` encontra-se diretamente na raiz do ZIP.
 2. No repositório `IamMigas/contos-de-fada`, abre **Code → Add file → Upload files**.
-3. Arrasta o conteúdo da pasta `contos-de-fada-pages`: `index.html`, `assets/`, `README.md` e `.nojekyll`.
-4. Aceita a substituição dos ficheiros com o mesmo nome e clica **Commit changes**.
-5. Os antigos `worker/`, `wrangler.jsonc`, `build.mjs`, `package.json` e testes não são usados por esta versão. Podem ficar no repositório por agora; não é necessário executá-los.
+3. Envia **todo o conteúdo extraído**, incluindo `assets` e `data`, para a raiz. Não envies o ZIP nem uma pasta exterior. Esta atualização precisa dos novos ficheiros, não basta enviar index.html.
+4. Clica em **Commit changes**. Não apagues os dados no navegador.
+5. Em **Actions**, espera que a publicação mais recente termine com visto verde.
+6. Abre https://iammigas.github.io/contos-de-fada/ e atualiza com Ctrl+F5.
+7. Confirma que aparece **OFICINA · v2.0.0** por baixo do cabeçalho.
 
-Não coloques a pasta `contos-de-fada-pages` inteira dentro do repositório: `index.html` tem de ficar na raiz.
+Mantém **Settings → Pages → Deploy from a branch → main → /(root)**. Não precisa de Cloudflare nem de serviços pagos.
 
-## Ativar o site
+## Utilizar
 
-1. Abre **Settings → Pages**.
-2. Em **Source**, escolhe **Deploy from a branch**.
-3. Escolhe a branch **main** e a pasta **/(root)**.
-4. Clica **Save**.
-5. Aguarda a publicação. O GitHub mostrará o endereço em **Pages → Visit site**.
+- Pesquisa e filtra receitas por favoritas, selecionadas ou com localização.
+- Seleciona itens, ajusta quantidades e indica os componentes que já tens.
+- Na lista de recolha, regista os materiais brutos obtidos. As quantidades são persistentes e partilhadas entre categorias. Não há consumo automático ao fabricar: atualiza o inventário após usar materiais.
+- **Ver no mapa** seleciona a arma, abre o mapa e centra o local. Selecionar uma receita por si só não abre o mapa.
+- Sem armas selecionadas não há marcadores de craft. Marcadores pessoais são independentes.
+- Locais partilhados usam um marcador único. Abre o marcador para ver os nomes e a imagem de referência.
+- O mapa carrega apenas quando o abres e usa blocos conforme a zona e o zoom. Roda do rato, botões +/−, setas no teclado e gesto com dois dedos. O limite de zoom respeita os 7200 × 5400 píxeis da fonte; não há detalhe inventado.
+- Ativa **Adicionar marcador** antes de clicar no mapa para criar um ponto.
+- Guarda conjuntos de seleção e carrega-os mais tarde. Favoritas, inventário e seleção ficam guardados automaticamente.
+- Exporta uma cópia JSON regularmente. Importar substitui os dados atuais, mediante confirmação. Cópias inválidas são rejeitadas.
+- **Desfazer** recupera a última eliminação ou limpeza durante a sessão e recarrega a página.
 
-Para o repositório `IamMigas/contos-de-fada`, o endereço esperado é `https://iammigas.github.io/contos-de-fada/`. O estado da publicação pode ser visto no separador Actions. Atualizar `main` volta a publicar o site.
+## Dados e limitações
 
-## O que funciona
+Os dados são pessoais e ficam no navegador, neste domínio. Não há contas ou sincronização entre utilizadores/dispositivos. Exportar/importar permite transferi-los manualmente. Não existe servidor de autenticação neste pacote; partilha automática e permissões exigem um serviço de backend e uma decisão sobre quem pode ler e editar.
 
-- Todas as receitas base e quantidades originais.
-- Calculadora, quantidades e desconto dos componentes que já tens.
-- Imagens da marca, mapa HD, mapa original e zoom.
-- Local da Mauser visível apenas quando a arma está selecionada.
-- Receitas personalizadas e marcadores guardados no navegador através de localStorage.
+As localizações foram fornecidas por imagens do utilizador e alinhadas com o mapa; não foram verificadas dentro do jogo. A receita de **Remington 1858 não foi fornecida**: a localização está preparada para uma receita personalizada com esse nome, mas não foram inventados materiais.
 
-## Como os dados são guardados
+Os testes de integração verificam cálculo, persistência, seleção, favoritos, referências, grupos de marcadores e validação de backups. A pré-visualização num navegador real não estava disponível no ambiente de preparação; confirmar o aspeto final no computador e telemóvel após publicação.
 
-Esta versão não depende de um servidor para guardar os dados. Por isso:
+## Estrutura e manutenção
 
-- Os dados de cada utilizador são independentes.
-- Não há partilha automática entre pessoas, navegadores ou dispositivos.
-- Limpar os dados do site pode apagar as receitas personalizadas e os marcadores.
-- Navegação privada pode não conservar os dados ao fechar a janela.
-- As seleções da calculadora continuam temporárias; as receitas personalizadas e marcadores são persistidos.
-- Não copia os dados personalizados do site anterior. As receitas base e o local da Mauser estão incluídos no código.
+- `index.html`: interface e calculadora original, corrigida.
+- `data/recipes.js`: receitas base; preservar os nomes e quantidades.
+- `data/recipes-baseline.json`: valores de referência para validação.
+- `data/locations.js`: posições e metadados dos locais.
+- `assets/pro.js`, `assets/pro.css`: experiência e persistência da oficina.
+- `assets/map-tiles.js`, `assets/tiles`: mapa progressivo.
+- `assets/reference-*.png`: imagens dos pontos fornecidas pelo utilizador.
 
-O site e as imagens ficam acessíveis publicamente pelo GitHub Pages. Não existe autenticação ChatGPT nesta versão.
+Antes de publicar alterações, com Node.js instalado, executa `node validate.mjs` nesta pasta. O comando verifica as receitas contra a referência, coordenadas, sintaxe e presença de ficheiros/blocos do mapa. Se uma receita base mudar legitimamente, atualizar a referência deve ser uma decisão explícita.
 
 ## Créditos
 
-Mapa: Rockstar Games, compilação GTA Base. Créditos e marcas originais preservados. Imagem Contos de Fada gerada para o projeto. Fontes carregadas através de Google Fonts.
-
-Documentação: https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
+Mapa: GTA Base / Rockstar Games. Ver `assets/map-source.md`. Mantidas as marcas da imagem original. Visual Contos de Fada preservado.
