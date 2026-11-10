@@ -1,7 +1,7 @@
 /* Contos de Fada 2.0 — personal workspace, no remote backend. */
 (() => {
 'use strict';
-const VERSION='2.0.0', KEY='contos-de-fada-workspace-v2', DATA='contos-de-fada-data-v1';
+const VERSION='3.0.0', KEY='contos-de-fada-workspace-v2', DATA='contos-de-fada-data-v1';
 const $=id=>document.getElementById(id), safeParse=(s,f)=>{try{return JSON.parse(s)||f}catch{return f}};
 let state=Object.assign({favorites:[],sets:[],gathered:{},store:{},lastCategory:'armas'},safeParse(localStorage.getItem(KEY),{}));
 let lastRaw={}, filter='all', undo=null, ready=false;

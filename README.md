@@ -1,4 +1,4 @@
-# Contos de Fada · Oficina 2.0.0
+# Contos de Fada · Atlas 3.0.0
 
 Aplicação estática para GitHub Pages. Mantém as receitas base e quantidades originais.
 
@@ -10,7 +10,7 @@ Aplicação estática para GitHub Pages. Mantém as receitas base e quantidades 
 4. Clica em **Commit changes**. Não apagues os dados no navegador.
 5. Em **Actions**, espera que a publicação mais recente termine com visto verde.
 6. Abre https://iammigas.github.io/contos-de-fada/ e atualiza com Ctrl+F5.
-7. Confirma que aparece **OFICINA · v2.0.0** por baixo do cabeçalho.
+7. Confirma que aparece **ATLAS · EDIÇÃO 03** por baixo do cabeçalho.
 
 Mantém **Settings → Pages → Deploy from a branch → main → /(root)**. Não precisa de Cloudflare nem de serviços pagos.
 
@@ -42,7 +42,7 @@ Os testes de integração verificam cálculo, persistência, seleção, favorito
 - `data/recipes.js`: receitas base; preservar os nomes e quantidades.
 - `data/recipes-baseline.json`: valores de referência para validação.
 - `data/locations.js`: posições e metadados dos locais.
-- `assets/pro.js`, `assets/pro.css`: experiência e persistência da oficina.
+- `assets/pro.js`, `assets/atlas.js`, `assets/atlas.css`: experiência e persistência da oficina.
 - `assets/map-tiles.js`, `assets/tiles`: mapa progressivo.
 - `assets/reference-*.png`: imagens dos pontos fornecidas pelo utilizador.
 
@@ -51,3 +51,7 @@ Antes de publicar alterações, com Node.js instalado, executa `node validate.mj
 ## Créditos
 
 Mapa: GTA Base / Rockstar Games. Ver `assets/map-source.md`. Mantidas as marcas da imagem original. Visual Contos de Fada preservado.
+
+## Interface Atlas 3.0
+
+Nova direção visual: navegação lateral verde, superfície marfim, tipografia editorial, acesso ao mapa no cabeçalho e ferramentas recolhidas em «O teu caderno». O tema escuro está disponível em «Alternar ambiente». A versão 3.0.0 é visível no rodapé e no caderno. As funções da versão 2.0 foram mantidas.
