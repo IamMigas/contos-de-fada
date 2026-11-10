@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Contos de Fada — Craft &amp; Supplies</title>
 
-<link rel="stylesheet" href="./assets/atlas.css?v=3.0.0">
+<link rel="stylesheet" href="./assets/atlas.css?v=3.0.1">
 </head>
 <body>
 <a class="skip-link" href="#calculatorPanel">Saltar para a calculadora</a>
@@ -33,12 +33,12 @@
     <main id="mapPanel" class="container map-panel" aria-label="Separador do mapa">
         <div class="section-title">Mapa de RedM</div>
         <div id="craftLocationInfo" class="craft-location-info" hidden aria-live="polite"><div><span class="craft-location-eyebrow">LOCAL DE CRAFT</span><strong id="craftLocationName"></strong><p>Bayou Nwa · sudoeste de Lagras. Ponto assinalado na imagem de referência.</p></div><button type="button" class="map-action secondary" onclick="returnToCraft()">← Voltar à receita</button></div>
-        <div class="map-auth panel">
+        <div class="map-auth panel" hidden>
             <p id="mapAuthStatus">A carregar os dados deste navegador…</p>
             <button type="button" class="map-action" id="mapConnect">Carregar dados locais</button>
         </div>
         <div class="map-toolbar">
-            <span id="mapHelp">Arrasta para mover, usa a roda do rato para ampliar e clica no mapa para adicionar marcadores Arrasta um pin para ajustar a posição.</span>
+            <span id="mapHelp" hidden>Arrasta para mover, usa a roda do rato para ampliar e clica no mapa para adicionar marcadores Arrasta um pin para ajustar a posição.</span>
             <div class="map-view-controls"><label class="map-quality-label">Mapa <select id="mapQuality" onchange="setMapQuality(this.value)"><option value="hd">Alta definição</option><option value="original">Original · inclui México</option></select></label><button type="button" class="map-action secondary" id="mapZoomOut" aria-label="Reduzir mapa">−</button><output id="mapZoomLevel" aria-live="polite">100%</output><button type="button" class="map-action secondary" id="mapZoomIn" aria-label="Ampliar mapa">+</button><button type="button" class="map-action secondary" id="mapReset">Repor zoom</button></div>
         </div>
         <div class="map-frame interactive-map" id="mapFrame">
@@ -49,8 +49,8 @@
                 </div>
             </div>
         </div>
-        <p class="map-quality-note" id="mapQualityNote">Mapa HD: 7200 × 5400 px. Ampliação limitada ao detalhe disponível.</p><p class="map-credit">Mapa HD: <a href="https://www.gtabase.com/red-dead-redemption-2/map-locations/" target="_blank" rel="noopener noreferrer">GTA Base</a> · Rockstar Games. Para consultar o México, escolhe o mapa original.</p><div class="map-legend"><span id="mapLegendItems"></span> <span id="markerCount">0 marcadores</span></div>
-        <p class="map-note">Os teus marcadores e receitas personalizadas ficam neste navegador. Não são partilhados entre dispositivos e podem perder-se ao limpar os dados do site.</p>
+        <p class="map-quality-note" id="mapQualityNote" hidden>Mapa HD: 7200 × 5400 px. Ampliação limitada ao detalhe disponível.</p><p class="map-credit">Mapa HD: <a href="https://www.gtabase.com/red-dead-redemption-2/map-locations/" target="_blank" rel="noopener noreferrer">GTA Base</a> · Rockstar Games. Para consultar o México, escolhe o mapa original.</p><div class="map-legend" hidden><span id="mapLegendItems"></span> <span id="markerCount">0 marcadores</span></div>
+        <p class="map-note" hidden>Os teus marcadores e receitas personalizadas ficam neste navegador. Não são partilhados entre dispositivos e podem perder-se ao limpar os dados do site.</p>
     </main>
 
     <div class="container" id="calculatorPanel">
@@ -83,8 +83,8 @@
     <div id="mapDialog" class="map-dialog" style="display:none"><div class="map-dialog-box" id="mapDialogBody"></div></div>
     <footer><strong>Contos de Fada</strong><span>Prepara o craft. Conquista o caminho.</span></footer>
 
-    <script src="./data/recipes.js?v=3.0.0"></script>
-    <script src="./data/locations.js?v=3.0.0"></script>
+    <script src="./data/recipes.js?v=3.0.1"></script>
+    <script src="./data/locations.js?v=3.0.1"></script>
     <script>
         // Theme
         function toggleTheme() {
@@ -409,9 +409,21 @@
             const {a,b,tx,ty}=MAP_REGISTRATION, x=point.x*7200, y=point.y*5400;
             return {x:(a*x-b*y+tx)/4320,y:(b*x+a*y+ty)/3444};
         }
-        function mapMaxZoom() { return Math.max(1,Math.min(24,(activeMapMode === 'hd'?7200:4320)/(mapImage.clientWidth||720))); }
+        function mapMinZoom() {
+            const width=mapImage.clientWidth, height=mapImage.clientHeight;
+            if (!width || !height || !mapViewport.clientWidth || !mapViewport.clientHeight) return 1;
+            return Math.max(1,mapViewport.clientWidth/width,mapViewport.clientHeight/height);
+        }
+        function mapMaxZoom() { return Math.max(mapMinZoom(),Math.min(24,(activeMapMode === 'hd'?7200:4320)/(mapImage.clientWidth||720))); }
+        function constrainMap() {
+            const width=mapImage.clientWidth,height=mapImage.clientHeight,vw=mapViewport.clientWidth,vh=mapViewport.clientHeight;
+            if(!width||!height||!vw||!vh)return;
+            zoom=Math.max(mapMinZoom(),Math.min(mapMaxZoom(),zoom));
+            panX=Math.max(vw-width*zoom,Math.min(0,panX));
+            panY=Math.max(vh-height*zoom,Math.min(0,panY));
+        }
         function zoomMapBy(factor,x=mapViewport.clientWidth/2,y=mapViewport.clientHeight/2) {
-            const next=Math.max(1,Math.min(mapMaxZoom(),zoom*factor)),k=next/zoom;
+            const next=Math.max(mapMinZoom(),Math.min(mapMaxZoom(),zoom*factor)),k=next/zoom;
             panX=x-(x-panX)*k;panY=y-(y-panY)*k;zoom=next;updateMapTransform();
         }
         function setMapQuality(mode) {
@@ -494,7 +506,7 @@
                 mapMarkers.appendChild(pin);
             });
         }
-        function updateMapTransform(){ mapWorld.style.setProperty('--inv', 1/zoom); mapWorld.style.transform = `translate(${panX}px, ${panY}px) scale(${zoom})`; document.getElementById('mapZoomLevel').textContent=Math.round(zoom*100)+'%';document.getElementById('mapZoomIn').disabled=zoom>=mapMaxZoom()-.01;document.getElementById('mapZoomOut').disabled=zoom<=1; }
+        function updateMapTransform(){ constrainMap(); mapWorld.style.setProperty('--inv', 1/zoom); mapWorld.style.transform = `translate(${panX}px, ${panY}px) scale(${zoom})`; document.getElementById('mapZoomLevel').textContent=Math.round(zoom/mapMinZoom()*100)+'%';document.getElementById('mapZoomIn').disabled=zoom>=mapMaxZoom()-.01;document.getElementById('mapZoomOut').disabled=zoom<=mapMinZoom()+.001; }
         document.getElementById('mapReset').addEventListener('click',()=>{zoom=1;panX=0;panY=0;updateMapTransform();});
         document.getElementById('mapZoomIn').addEventListener('click',()=>zoomMapBy(1.35));
         document.getElementById('mapZoomOut').addEventListener('click',()=>zoomMapBy(1/1.35));
@@ -596,13 +608,7 @@
             renderLegend({...data, ...Object.fromEntries(Object.entries(craftLocations).map(([k,v])=>['craft:'+k,v]))});
             const n=Object.keys(data||{}).length + Object.keys(craftLocations).length;document.getElementById('markerCount').textContent=`${n} marcador${n===1?'':'es'}`;
         }
-        mapFrame.addEventListener('click',async ev=>{
-            if(dragMoved||ev.target.closest('.map-marker'))return;
-            const r=mapImage.getBoundingClientRect(),x=(ev.clientX-r.left)/r.width,y=(ev.clientY-r.top)/r.height;if(x<0||x>1||y<0||y>1)return;
-            const stored=mapStoredPoint({x,y});
-            if(stored.x<0||stored.x>1||stored.y<0||stored.y>1)return;
-            openAddDialog(stored.x,stored.y);
-        });
+
 
         const CAT_LABEL = {business:'Empresa',location:'Local',danger:'Perigo',other:'Outro'};
 
@@ -736,8 +742,8 @@
         initShared();
 
     </script>
-<script src="./assets/pro.js?v=3.0.0"></script>
-<script src="./assets/map-tiles.js?v=3.0.0"></script>
-<script src="./assets/atlas.js?v=3.0.0"></script>
+<script src="./assets/pro.js?v=3.0.1"></script>
+<script src="./assets/map-tiles.js?v=3.0.1"></script>
+<script src="./assets/atlas.js?v=3.0.1"></script>
 </body>
 </html>

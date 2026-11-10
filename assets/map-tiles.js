@@ -1,8 +1,12 @@
 /* Load only visible map tiles at a detail level matching the displayed size. */
 (() => {
 const layer=document.createElement('div');layer.className='map-tile-layer';layer.setAttribute('aria-hidden','true');mapWorld.insertBefore(layer,mapMarkers);
+// Decorative parchment panels cover only the two logos in empty map margins.
+const margins=document.createElement('div');margins.className='map-margin-panels';margins.setAttribute('aria-hidden','true');
+for(const name of ['top','bottom']){const panel=document.createElement('div');panel.className='map-margin-'+name;margins.append(panel)}
+mapWorld.insertBefore(margins,mapMarkers);
 let scheduled=false;
-function paint(){scheduled=false;layer.hidden=activeMapMode!=='hd'||!mapOpened;if(layer.hidden)return;
+function paint(){scheduled=false;layer.hidden=activeMapMode!=='hd'||!mapOpened;margins.hidden=layer.hidden;if(layer.hidden)return;
  const width=mapImage.clientWidth,height=mapImage.clientHeight;if(!width||!height)return;
  const target=width*zoom*Math.min(window.devicePixelRatio||1,2);const sizes=[900,1800,3600,7200];const level=Math.min(3,Math.max(0,Math.ceil(Math.log2(Math.max(900,target)/900))));const nativeWidth=sizes[level],nativeHeight=nativeWidth*.75;
  const scaleX=width*zoom/nativeWidth,scaleY=height*zoom/nativeHeight;

@@ -1,4 +1,4 @@
-# Contos de Fada · Atlas 3.0.0
+# Contos de Fada · Atlas 3.0.1
 
 Aplicação estática para GitHub Pages. Mantém as receitas base e quantidades originais.
 
@@ -23,7 +23,7 @@ Mantém **Settings → Pages → Deploy from a branch → main → /(root)**. N�
 - Sem armas selecionadas não há marcadores de craft. Marcadores pessoais são independentes.
 - Locais partilhados usam um marcador único. Abre o marcador para ver os nomes e a imagem de referência.
 - O mapa carrega apenas quando o abres e usa blocos conforme a zona e o zoom. Roda do rato, botões +/−, setas no teclado e gesto com dois dedos. O limite de zoom respeita os 7200 × 5400 píxeis da fonte; não há detalhe inventado.
-- Ativa **Adicionar marcador** antes de clicar no mapa para criar um ponto.
+- A criação de marcadores pelo mapa foi removida. Os marcadores de craft continuam ligados às armas selecionadas.
 - Guarda conjuntos de seleção e carrega-os mais tarde. Favoritas, inventário e seleção ficam guardados automaticamente.
 - Exporta uma cópia JSON regularmente. Importar substitui os dados atuais, mediante confirmação. Cópias inválidas são rejeitadas.
 - **Desfazer** recupera a última eliminação ou limpeza durante a sessão e recarrega a página.
@@ -54,4 +54,8 @@ Mapa: GTA Base / Rockstar Games. Ver `assets/map-source.md`. Mantidas as marcas 
 
 ## Interface Atlas 3.0
 
-Nova direção visual: navegação lateral verde, superfície marfim, tipografia editorial, acesso ao mapa no cabeçalho e ferramentas recolhidas em «O teu caderno». O tema escuro está disponível em «Alternar ambiente». A versão 3.0.0 é visível no rodapé e no caderno. As funções da versão 2.0 foram mantidas.
+Nova direção visual: navegação lateral verde, superfície marfim, tipografia editorial, acesso ao mapa no cabeçalho e ferramentas recolhidas em «O teu caderno». O tema escuro está disponível em «Alternar ambiente». A versão 3.0.1 é visível no rodapé e no caderno. As funções da versão 2.0 foram mantidas.
+
+## Ajuste do mapa 3.0.1
+
+Arrasto e zoom limitados às dimensões da imagem, incluindo ecrãs verticais. Sem espaço exterior ao mapa durante a navegação. Removidos o botão e o gesto de criação de marcadores, e ocultados os textos auxiliares. Os dois logótipos nas margens vazias do mapa HD ficam cobertos por painéis da cor do papel; a imagem fonte e as coordenadas permanecem intactas. O crédito da fonte permanece abaixo do mapa.

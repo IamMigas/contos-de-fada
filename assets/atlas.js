@@ -7,6 +7,6 @@ const render=renderWeapons;renderWeapons=function(){render();styleCards()};const
 const oldTools=document.querySelector('.pro-tools');const drawer=document.createElement('details');drawer.className='atlas-notebook';const title=document.createElement('summary');title.innerHTML='<span><strong>O teu caderno</strong><small>Conjuntos, cópias de segurança e ajuda</small></span><span class="notebook-toggle">Abrir +</span>';drawer.append(title);oldTools.before(drawer);drawer.append(oldTools);drawer.addEventListener('toggle',()=>drawer.querySelector('.notebook-toggle').textContent=drawer.open?'Fechar −':'Abrir +');
 const heading=$('calculatorPanel').querySelector('.hint');heading.firstChild.textContent='Adiciona receitas ao teu plano e nós tratamos das contas. ';
 $('recipeSearch').placeholder='Procurar no catálogo…';$('recipeSearch').parentElement.querySelector('span').textContent='⌕';
-$('appVersion').textContent='CONTOS DE FADA · ATLAS 3.0.0';document.querySelector('footer strong').textContent='Contos de Fada';document.querySelector('footer span').textContent='O teu caderno de campo · Atlas 3.0.0';document.querySelector('#mapPanel>.section-title').textContent='Atlas dos territórios';
+$('appVersion').textContent='CONTOS DE FADA · ATLAS 3.0.1';document.querySelector('footer strong').textContent='Contos de Fada';document.querySelector('footer span').textContent='O teu caderno de campo · Atlas 3.0.1';document.querySelector('#mapPanel>.section-title').textContent='Atlas dos territórios';
 refresh();
 })();

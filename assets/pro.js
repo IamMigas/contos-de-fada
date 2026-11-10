@@ -1,7 +1,7 @@
 /* Contos de Fada 2.0 — personal workspace, no remote backend. */
 (() => {
 'use strict';
-const VERSION='3.0.0', KEY='contos-de-fada-workspace-v2', DATA='contos-de-fada-data-v1';
+const VERSION='3.0.1', KEY='contos-de-fada-workspace-v2', DATA='contos-de-fada-data-v1';
 const $=id=>document.getElementById(id), safeParse=(s,f)=>{try{return JSON.parse(s)||f}catch{return f}};
 let state=Object.assign({favorites:[],sets:[],gathered:{},store:{},lastCategory:'armas'},safeParse(localStorage.getItem(KEY),{}));
 let lastRaw={}, filter='all', undo=null, ready=false;
@@ -78,9 +78,6 @@ function updateSummary(){const qty=Object.values(selectedWeapons).reduce((a,b)=>
 const db=makeDb(),originalCollection=db.collection;db.collection=function(c){const col=originalCollection(c),originalDoc=col.doc;col.doc=function(id){const doc=originalDoc(id),remove=doc.delete;doc.delete=async()=>{checkpoint();await remove();say('Registo apagado. Podes recuperar com Desfazer.')};return doc};return col};markersCol=db.collection('markers');recipesCol=db.collection('recipes');
 // Accessible map navigation and intentional marker placement.
 mapFrame.tabIndex=0;mapFrame.setAttribute('aria-label','Mapa. Setas para mover, mais e menos para ampliar, zero para repor.');mapFrame.addEventListener('keydown',e=>{if(e.target!==mapFrame)return;const shifts={ArrowLeft:[60,0],ArrowRight:[-60,0],ArrowUp:[0,60],ArrowDown:[0,-60]};if(shifts[e.key]){e.preventDefault();panX+=shifts[e.key][0];panY+=shifts[e.key][1];updateMapTransform()}else if(['+','=','-','0'].includes(e.key)){e.preventDefault();if(e.key==='0')$('mapReset').click();else zoomMapBy(e.key==='-'?1/1.35:1.35)}});
-const place=button('Adicionar marcador: desligado',()=>{placing=!placing;place.textContent='Adicionar marcador: '+(placing?'ligado':'desligado');place.setAttribute('aria-pressed',String(placing));say(placing?'Clica no mapa para criar um marcador.':'Navegação do mapa ativa.')});let placing=false;place.setAttribute('aria-pressed','false');document.querySelector('.map-toolbar').prepend(place);
-mapFrame.addEventListener('click',e=>{if(!placing&&!e.target.closest('.map-marker'))e.stopImmediatePropagation()},true);
-$('mapHelp').textContent='Arrasta para mover. Usa +/− para ampliar. Ativa «Adicionar marcador» para criar um ponto. No teclado, usa as setas.';
 document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-label',t.textContent.trim()));
 // Restore after custom recipes have been loaded by the local adapter.
 for(const cat of Object.keys(CATS)){const st=state.store[cat];if(st&&isObj(st.s)&&isObj(st.o)){STORE[cat]={s:Object.fromEntries(Object.entries(st.s).filter(([n,q])=>Object.hasOwn(CATS[cat].items,n)&&Number.isInteger(q)&&q>0&&q<=99)),o:st.o}}}
